@@ -334,21 +334,21 @@ failQuiz("Terdeteksi keluar dari window.")
 })
 
 
-// // ======================
-// // REFRESH / CLOSE DETECT
-// // ======================
+// ======================
+// REFRESH / CLOSE DETECT
+// ======================
 
-// window.addEventListener("beforeunload",function(){
+window.addEventListener("beforeunload",function(){
 
-// if(TEST_MODE) return
+if(TEST_MODE) return
 
-// if(quizStarted){
+if(quizStarted){
 
-// localStorage.setItem("quizPlayed","true")
+localStorage.setItem("quizPlayed","true")
 
-// }
+}
 
-// })
+})
 
 
 // ======================
