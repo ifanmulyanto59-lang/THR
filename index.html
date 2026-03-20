@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Quiz THR Ramadhan</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="container">
+
+<h1 class="title">Quiz Ramadhan</h1>
+<p class="subtitle">Jawab quiz untuk mendapatkan THR</p>
+
+<!-- START PAGE -->
+
+<div id="startPage">
+
+<p class="info">
+10 soal quiz Ramadhan.  
+Minimal benar <b>8 soal</b> untuk mendapatkan THR.
+</p>
+
+<button class="primaryBtn" onclick="startQuiz()">
+Mulai Quiz
+</button>
+
+</div>
+
+
+<!-- QUIZ PAGE -->
+
+<div id="quizPage" class="hidden">
+
+<div class="progress">
+<div id="progressBar"></div>
+</div>
+
+<h2 id="question"></h2>
+
+<div id="answers"></div>
+
+</div>
+
+
+<!-- RESULT -->
+
+<div id="resultPage" class="hidden">
+
+<h2 id="resultText"></h2>
+
+<button id="claimBtn" class="primaryBtn hidden" onclick="showClaim()">
+Klaim THR
+</button>
+
+</div>
+
+
+<!-- CLAIM PAGE -->
+
+<div id="claimPage" class="hidden">
+
+<h2>Form Transfer</h2>
+
+<div class="formGroup">
+<label>Metode Transfer</label>
+
+<select id="method">
+<option>DANA</option>
+<option>GOPAY</option>
+<option>OVO</option>
+<option>Bank BCA</option>
+<option>Bank BRI</option>
+<option>Bank Mandiri</option>
+<option>Bank Lain</option>
+</select>
+
+</div>
+
+<div class="formGroup">
+<label>Nomor Rekening / No HP</label>
+<input id="rekening">
+</div>
+
+<div class="formGroup">
+<label>Atas Nama</label>
+<input id="nama">
+</div>
+
+<button class="primaryBtn" onclick="sendWA()">
+Kirim Data
+</button>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
