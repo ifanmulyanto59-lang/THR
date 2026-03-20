@@ -20,7 +20,7 @@ let quizFinished = false
 // TIMER
 // ======================
 
-let timeLeft = 15
+let timeLeft = 10
 let timer
 
 
@@ -191,7 +191,7 @@ startTimer()
 
 function startTimer(){
 
-timeLeft = 15
+timeLeft = 10
 
 document.getElementById("timer").innerText = timeLeft
 
