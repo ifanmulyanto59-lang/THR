@@ -20,7 +20,7 @@ let quizFinished = false
 // TIMER
 // ======================
 
-let timeLeft = 10
+let timeLeft = 15
 let timer
 
 
@@ -50,7 +50,7 @@ const questions = [
 
 {
 q:"Perang Badar terjadi pada tahun?",
-a:["1 H","2 H","3 H","5 H"],
+a:["1 Hijriyah","2 Hijriyah","3 Hijriyah","5 Hijriyah"],
 c:1
 },
 
@@ -73,14 +73,14 @@ c:2
 },
 
 {
-q:"Berapa rakaat sholat tarawih umum di Indonesia?",
-a:["8","11","20","23"],
+q:"Berapa rakaat sholat tarawih yang umum di Indonesia?",
+a:["8","11 dan 23","20","11 dan 21"],
 c:2
 },
 
 {
 q:"Puasa Ramadhan diwajibkan pada tahun?",
-a:["1 H","2 H","3 H","4 H"],
+a:["1 Hijriyah","2 Hijriyah","3 Hijriyah","4 Hijriyah"],
 c:1
 },
 
@@ -191,7 +191,7 @@ startTimer()
 
 function startTimer(){
 
-timeLeft = 10
+timeLeft = 15
 
 document.getElementById("timer").innerText = timeLeft
 
