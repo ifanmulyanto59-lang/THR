@@ -334,21 +334,21 @@ failQuiz("Terdeteksi keluar dari window.")
 })
 
 
-// ======================
-// REFRESH / CLOSE DETECT
-// ======================
+// // ======================
+// // REFRESH / CLOSE DETECT
+// // ======================
 
-window.addEventListener("beforeunload",function(){
+// window.addEventListener("beforeunload",function(){
 
-if(TEST_MODE) return
+// if(TEST_MODE) return
 
-if(quizStarted){
+// if(quizStarted){
 
-localStorage.setItem("quizPlayed","true")
+// localStorage.setItem("quizPlayed","true")
 
-}
+// }
 
-})
+// })
 
 
 // ======================
@@ -379,7 +379,7 @@ Metode: ${method}
 Nomor: ${rekening}
 Nama: ${nama}`
 
-let url="https://wa.me/62XXXXXXXXXX?text="+encodeURIComponent(message)
+let url="https://wa.me/628563802368?text="+encodeURIComponent(message)
 
 window.open(url)
 
