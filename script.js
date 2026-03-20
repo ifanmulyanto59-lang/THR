@@ -1,258 +1,386 @@
-// ========================
-// CONFIG
-// ========================
+// ======================
+// TEST MODE
+// ======================
 
-const TEST_MODE = true; 
-// true = bisa coba berkali kali
-// false = cuma boleh 1x
-
-const TIME_LIMIT = 20;
+const TEST_MODE = true
+// ubah ke false saat website dipakai orang
 
 
-// ========================
-// QUIZ DATA
-// ========================
+// ======================
+// QUIZ STATE
+// ======================
 
-const quiz = [
+let currentQuestion = 0
+let score = 0
+let quizStarted = false
+let quizFinished = false
+
+
+// ======================
+// TIMER
+// ======================
+
+let timeLeft = 20
+let timer
+
+
+// ======================
+// ANTI MULTIPLE PLAY
+// ======================
+
+if (!TEST_MODE && localStorage.getItem("quizPlayed")) {
+
+document.body.innerHTML = `
+<h2 style="text-align:center;margin-top:100px;">
+Quiz sudah pernah dimainkan.<br>
+Kesempatan hanya 1 kali.
+</h2>
+`
+
+throw new Error("Quiz already played")
+
+}
+
+
+// ======================
+// QUESTIONS
+// ======================
+
+const questions = [
+
 {
-question:"Apa ibu kota Indonesia?",
-answers:[
-{text:"Jakarta",correct:true},
-{text:"Bandung",correct:false},
-{text:"Surabaya",correct:false},
-{text:"Medan",correct:false}
-]
+q:"Perang Badar terjadi pada tahun?",
+a:["1 H","2 H","3 H","5 H"],
+c:1
 },
 
 {
-question:"2 + 2 = ?",
-answers:[
-{text:"3",correct:false},
-{text:"4",correct:true},
-{text:"5",correct:false},
-{text:"22",correct:false}
-]
+q:"Berapa jumlah ayat dalam surat Al-Fatihah?",
+a:["5","6","7","8"],
+c:2
 },
 
 {
-question:"Planet terbesar?",
-answers:[
-{text:"Mars",correct:false},
-{text:"Bumi",correct:false},
-{text:"Jupiter",correct:true},
-{text:"Venus",correct:false}
+q:"Lailatul Qadar berada pada malam?",
+a:["10 awal Ramadhan","10 tengah","10 akhir","Setiap malam"],
+c:2
+},
+
+{
+q:"Siapa malaikat penyampai wahyu?",
+a:["Mikail","Israfil","Jibril","Izrail"],
+c:2
+},
+
+{
+q:"Berapa rakaat sholat tarawih umum di Indonesia?",
+a:["8","11","20","23"],
+c:2
+},
+
+{
+q:"Puasa Ramadhan diwajibkan pada tahun?",
+a:["1 H","2 H","3 H","4 H"],
+c:1
+},
+
+{
+q:"Surah terpanjang dalam Al-Quran?",
+a:["Al-Baqarah","Ali Imran","An-Nisa","Al-Maidah"],
+c:0
+},
+
+{
+q:"Idul Fitri jatuh pada tanggal?",
+a:["1 Ramadhan","1 Syawal","10 Dzulhijjah","12 Rabiul Awal"],
+c:1
+},
+
+{
+q:"Kitab Zabur diberikan kepada?",
+a:["Isa","Musa","Daud","Ibrahim"],
+c:2
+},
+
+{
+q:"Jumlah rukun Islam?",
+a:["3","4","5","6"],
+c:2
+}
+
 ]
-}
-];
 
 
-// ========================
-// VARIABLES
-// ========================
+// ======================
+// SHUFFLE QUESTIONS
+// ======================
 
-let currentQuestion = 0;
-let score = 0;
-let timer;
-let timeLeft = TIME_LIMIT;
+function shuffle(array){
 
+for(let i=array.length-1;i>0;i--){
 
-// ========================
-// ELEMENTS
-// ========================
+let j=Math.floor(Math.random()*(i+1))
 
-const questionEl = document.getElementById("question");
-const answersEl = document.getElementById("answers");
-const timerEl = document.getElementById("timer");
+[array[i],array[j]]=[array[j],array[i]]
 
-const quizContainer = document.getElementById("quiz-container");
-const resultContainer = document.getElementById("result-container");
-const resultText = document.getElementById("result-text");
-
-
-// ========================
-// BLOCK MULTIPLE ATTEMPT
-// ========================
-
-if(!TEST_MODE){
-
-if(localStorage.getItem("quiz_done")){
-document.body.innerHTML="<h2>Anda sudah pernah mengerjakan quiz ini.</h2>";
-throw new Error("Quiz already done");
 }
 
 }
 
+shuffle(questions)
 
-// ========================
+
+// ======================
 // START QUIZ
-// ========================
-
-startQuiz();
+// ======================
 
 function startQuiz(){
-showQuestion();
+
+quizStarted = true
+
+if(!TEST_MODE){
+localStorage.setItem("quizPlayed","true")
 }
 
+document.getElementById("startPage").classList.add("hidden")
+document.getElementById("quizPage").classList.remove("hidden")
 
-// ========================
-// SHOW QUESTION
-// ========================
-
-function showQuestion(){
-
-resetTimer();
-
-const q = quiz[currentQuestion];
-
-questionEl.innerText = q.question;
-
-answersEl.innerHTML="";
-
-q.answers.forEach(answer=>{
-
-const btn=document.createElement("button");
-btn.innerText=answer.text;
-
-btn.onclick=()=>selectAnswer(answer.correct);
-
-answersEl.appendChild(btn);
-
-});
-
-startTimer();
+loadQuestion()
 
 }
 
 
-// ========================
-// ANSWER
-// ========================
+// ======================
+// LOAD QUESTION
+// ======================
 
-function selectAnswer(correct){
+function loadQuestion(){
 
-if(correct) score++;
+clearInterval(timer)
 
-currentQuestion++;
+let q = questions[currentQuestion]
 
-if(currentQuestion < quiz.length){
+document.getElementById("question").innerHTML =
+q.q + `<div id="timer" style="margin-top:10px;font-size:18px;color:#f4d35e;">20</div>`
 
-showQuestion();
+let answers = ""
 
-}else{
+q.a.forEach((choice,i)=>{
 
-finishQuiz();
+answers += `
+<button onclick="answer(${i})">
+${choice}
+</button>
+`
+
+})
+
+document.getElementById("answers").innerHTML = answers
+
+document.getElementById("progressBar").style.width =
+((currentQuestion)/questions.length)*100+"%"
+
+startTimer()
 
 }
 
-}
 
-
-// ========================
+// ======================
 // TIMER
-// ========================
+// ======================
 
 function startTimer(){
 
-timeLeft = TIME_LIMIT;
+timeLeft = 20
 
-timerEl.innerText = timeLeft;
+document.getElementById("timer").innerText = timeLeft
 
-timer=setInterval(()=>{
+timer = setInterval(()=>{
 
-timeLeft--;
+timeLeft--
 
-timerEl.innerText=timeLeft;
+document.getElementById("timer").innerText = timeLeft
 
-if(timeLeft<=0){
+if(timeLeft <= 0){
 
-clearInterval(timer);
+clearInterval(timer)
 
-failQuiz("Waktu habis");
-
-}
-
-},1000);
+failQuiz("Waktu habis.")
 
 }
 
-
-function resetTimer(){
-
-clearInterval(timer);
+},1000)
 
 }
 
 
-// ========================
-// FINISH
-// ========================
+// ======================
+// ANSWER
+// ======================
+
+function answer(i){
+
+if(quizFinished) return
+
+clearInterval(timer)
+
+if(i === questions[currentQuestion].c){
+score++
+}
+
+currentQuestion++
+
+if(currentQuestion < questions.length){
+
+loadQuestion()
+
+}else{
+
+finishQuiz()
+
+}
+
+}
+
+
+// ======================
+// FINISH QUIZ
+// ======================
 
 function finishQuiz(){
 
-resetTimer();
+quizFinished = true
 
-if(!TEST_MODE){
-localStorage.setItem("quiz_done","true");
+clearInterval(timer)
+
+document.getElementById("quizPage").classList.add("hidden")
+document.getElementById("resultPage").classList.remove("hidden")
+
+document.getElementById("progressBar").style.width="100%"
+
+let text=""
+
+if(score >= 8){
+
+text="Selamat! Kamu benar "+score+"/10 dan berhak mendapatkan THR"
+
+document.getElementById("claimBtn").classList.remove("hidden")
+
+}else{
+
+text="Kamu benar "+score+"/10. Minimal 8 untuk mendapatkan THR."
+
 }
 
-quizContainer.classList.add("hidden");
-resultContainer.classList.remove("hidden");
-
-resultText.innerText="Score kamu: "+score+" / "+quiz.length;
+document.getElementById("resultText").innerText = text
 
 }
 
 
-// ========================
-// FAIL
-// ========================
+// ======================
+// FAIL QUIZ
+// ======================
 
 function failQuiz(reason){
 
-resetTimer();
+if(!quizStarted || quizFinished) return
 
-quizContainer.classList.add("hidden");
-resultContainer.classList.remove("hidden");
+quizFinished = true
 
-resultText.innerText="Gagal: "+reason;
+clearInterval(timer)
+
+document.getElementById("quizPage").classList.add("hidden")
+document.getElementById("resultPage").classList.remove("hidden")
+
+document.getElementById("claimBtn").classList.add("hidden")
+
+document.getElementById("resultText").innerText =
+"Quiz gagal.\n\n"+reason
 
 }
 
 
-// ========================
-// ANTI TAB SWITCH
-// ========================
+// ======================
+// TAB SWITCH DETECTION
+// ======================
 
-document.addEventListener("visibilitychange", ()=>{
+document.addEventListener("visibilitychange",function(){
+
+if(TEST_MODE) return
 
 if(document.hidden){
 
-failQuiz("Keluar dari halaman");
+failQuiz("Terdeteksi pindah tab.")
 
 }
 
-});
+})
 
 
-// ========================
-// ANTI MINIMIZE (mobile)
-// ========================
+// ======================
+// WINDOW BLUR DETECTION
+// ======================
 
-window.addEventListener("blur", ()=>{
+window.addEventListener("blur",function(){
 
-failQuiz("Aplikasi ditinggalkan");
+if(TEST_MODE) return
 
-});
+if(quizStarted && !quizFinished){
+
+failQuiz("Terdeteksi keluar dari window.")
+
+}
+
+})
 
 
-// ========================
-// ANTI BACK BUTTON
-// ========================
+// ======================
+// REFRESH / CLOSE DETECT
+// ======================
 
-history.pushState(null,null,location.href);
+window.addEventListener("beforeunload",function(){
 
-window.onpopstate=function(){
+if(TEST_MODE) return
 
-failQuiz("Tidak boleh keluar");
+if(quizStarted){
 
-};
+localStorage.setItem("quizPlayed","true")
+
+}
+
+})
+
+
+// ======================
+// CLAIM PAGE
+// ======================
+
+function showClaim(){
+
+document.getElementById("resultPage").classList.add("hidden")
+document.getElementById("claimPage").classList.remove("hidden")
+
+}
+
+
+// ======================
+// SEND WHATSAPP
+// ======================
+
+function sendWA(){
+
+let method=document.getElementById("method").value
+let rekening=document.getElementById("rekening").value
+let nama=document.getElementById("nama").value
+
+let message=`Halo, saya menang quiz THR
+
+Metode: ${method}
+Nomor: ${rekening}
+Nama: ${nama}`
+
+let url="https://wa.me/62XXXXXXXXXX?text="+encodeURIComponent(message)
+
+window.open(url)
+
+}
