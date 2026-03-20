@@ -191,7 +191,7 @@ startTimer()
 
 function startTimer(){
 
-timeLeft = 20
+timeLeft = 10
 
 document.getElementById("timer").innerText = timeLeft
 
