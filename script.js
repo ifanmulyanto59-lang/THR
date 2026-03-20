@@ -20,7 +20,7 @@ let quizFinished = false
 // TIMER
 // ======================
 
-let timeLeft = 20
+let timeLeft = 10
 let timer
 
 
@@ -209,7 +209,7 @@ failQuiz("Waktu habis.")
 
 }
 
-},1000)
+},500)
 
 }
 
